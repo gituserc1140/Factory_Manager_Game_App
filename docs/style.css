@@ -1,0 +1,148 @@
+:root {
+  --bg: #0f1318;
+  --panel: #1e3c56;
+  --accent: #f39a2b;
+  --text: #e9f0f8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  overflow: hidden;
+}
+
+#app {
+  position: relative;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+#topBar {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  background: rgba(30, 60, 86, 0.95);
+  padding: 0.75rem;
+  font-weight: 600;
+  font-size: clamp(0.8rem, 2.6vw, 1rem);
+}
+
+#gameWrapper {
+  min-height: 0;
+}
+
+#gameCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+#bottomToolbar {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding: 0.6rem;
+  background: rgba(18, 24, 34, 0.98);
+  border-top: 1px solid #30485e;
+}
+
+.toolBtn {
+  flex: 0 0 auto;
+  min-width: 104px;
+  min-height: 46px;
+  border: 1px solid #3c5f80;
+  background: #244863;
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.45rem 0.65rem;
+  font-weight: 600;
+}
+
+.toolBtn.active {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.toolBtn.locked {
+  opacity: 0.45;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(10, 12, 16, 0.72);
+  z-index: 15;
+}
+
+.overlay.visible {
+  display: grid;
+}
+
+.hidden {
+  display: none;
+}
+
+.menuCard {
+  width: min(90vw, 440px);
+  background: #1f2f42;
+  border: 1px solid #3f5670;
+  border-radius: 14px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.menuCard button {
+  width: 100%;
+  margin-top: 0.6rem;
+  min-height: 48px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #1a1e23;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+#pauseToggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 3.2rem;
+  z-index: 6;
+  min-width: 48px;
+  min-height: 48px;
+  border: 1px solid #496280;
+  border-radius: 50%;
+  background: #243d52;
+  color: #fff;
+}
+
+.toolBtn:focus-visible,
+.menuCard button:focus-visible,
+#pauseToggle:focus-visible {
+  outline: 3px solid #ffd27f;
+  outline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+  #topBar {
+    flex-wrap: wrap;
+  }
+
+  .toolBtn {
+    min-width: 98px;
+    min-height: 50px;
+    font-size: 0.82rem;
+  }
+}

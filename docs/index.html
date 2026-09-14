@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Factory Manager</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header id="topBar">
+        <div>£<span id="money">0</span></div>
+        <div>Rate: £<span id="rate">0</span>/min</div>
+        <div>Level <span id="level">1</span></div>
+        <div>Buildings <span id="buildingsPlaced">0</span></div>
+      </header>
+
+      <main id="gameWrapper">
+        <canvas id="gameCanvas" width="1280" height="720"></canvas>
+      </main>
+
+      <section id="bottomToolbar" role="toolbar" aria-label="Building controls"></section>
+
+      <div id="menuOverlay" class="overlay visible">
+        <div class="menuCard">
+          <h1>Factory Manager</h1>
+          <p>Build, automate, and sell products to grow your factory.</p>
+          <button id="startBtn">Start Game</button>
+          <button id="loadBtn">Load Save</button>
+        </div>
+      </div>
+
+      <div id="pauseOverlay" class="overlay hidden">
+        <div class="menuCard">
+          <h2>Paused</h2>
+          <button id="resumeBtn">Resume</button>
+          <button id="saveBtn">Save</button>
+          <button id="menuBtn">Main Menu</button>
+        </div>
+      </div>
+
+      <button id="pauseToggle" aria-label="Pause game">⏸</button>
+    </div>
+
+    <script type="module" src="./game.js"></script>
+  </body>
+</html>
