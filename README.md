@@ -4,7 +4,7 @@ Factory Manager is a mobile-friendly 2D browser automation game built with HTML,
 
 ## Play
 
-Deploy the `/docs` folder with GitHub Pages and open `index.html`.
+Open the GitHub Pages site root to launch the game. For local use, open `/docs/index.html`.
 
 ## Gameplay
 
