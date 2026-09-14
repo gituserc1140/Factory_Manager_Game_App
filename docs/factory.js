@@ -7,7 +7,7 @@ import {
   receiveItem,
   updateMachine,
 } from "./machines.js";
-import { createDeposits, depositAt, RESOURCE_TYPES } from "./resources.js";
+import { createDeposits, dedupeDeposits, depositAt, RESOURCE_TYPES } from "./resources.js";
 
 const SAVE_KEY = "factory-manager-save-v1";
 
@@ -221,8 +221,10 @@ export class FactoryGame {
       }
 
       if (Array.isArray(data.deposits)) {
-        this.deposits = data.deposits.filter(
-          (d) => Number.isInteger(d.x) && Number.isInteger(d.y) && RESOURCE_TYPES[d.resource] && this.inBounds(d.x, d.y),
+        this.deposits = dedupeDeposits(
+          data.deposits.filter(
+            (d) => Number.isInteger(d.x) && Number.isInteger(d.y) && RESOURCE_TYPES[d.resource] && this.inBounds(d.x, d.y),
+          ),
         );
       }
 
@@ -254,7 +256,9 @@ export class FactoryGame {
               this.inBounds(bi.x, bi.y) &&
               DIRECTIONS.includes(bi.dir) &&
               typeof bi.item === "string" &&
-              Number.isFinite(bi.progress),
+              Number.isFinite(bi.progress) &&
+              bi.progress >= 0 &&
+              bi.progress <= 1,
           )
         : [];
       this.tiles = new Map();
