@@ -236,7 +236,8 @@ export class FactoryGame {
               Number.isInteger(b.x) &&
               Number.isInteger(b.y) &&
               this.inBounds(b.x, b.y) &&
-              DIRECTIONS.includes(b.dir),
+              DIRECTIONS.includes(b.dir) &&
+              (b.type !== "miner" || this.depositAt(b.x, b.y)),
           )
         : [];
       const occupiedTiles = new Set();
@@ -247,24 +248,29 @@ export class FactoryGame {
         return true;
       });
 
-      this.beltItems = Array.isArray(data.beltItems)
-        ? data.beltItems.filter(
-            (bi) =>
-              bi &&
-              Number.isInteger(bi.x) &&
-              Number.isInteger(bi.y) &&
-              this.inBounds(bi.x, bi.y) &&
-              DIRECTIONS.includes(bi.dir) &&
-              typeof bi.item === "string" &&
-              Number.isFinite(bi.progress) &&
-              bi.progress >= 0 &&
-              bi.progress <= 1,
-          )
-        : [];
       this.tiles = new Map();
       for (const b of this.buildings) {
         this.tiles.set(this.tileKey(b.x, b.y), b);
       }
+      this.beltItems = Array.isArray(data.beltItems)
+        ? data.beltItems.filter((bi) => {
+            if (
+              !bi ||
+              !Number.isInteger(bi.x) ||
+              !Number.isInteger(bi.y) ||
+              !this.inBounds(bi.x, bi.y) ||
+              !DIRECTIONS.includes(bi.dir) ||
+              typeof bi.item !== "string" ||
+              !Number.isFinite(bi.progress) ||
+              bi.progress < 0 ||
+              bi.progress > 1
+            ) {
+              return false;
+            }
+            const sourceBuilding = this.buildingAt(bi.x, bi.y);
+            return sourceBuilding?.type === "belt";
+          })
+        : [];
       this.sales = [];
       this.state = "playing";
       return true;

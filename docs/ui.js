@@ -167,9 +167,14 @@ export class GameUI {
       this.pinchDistance = d;
     }, { passive: false });
 
-    this.canvas.addEventListener("touchend", () => {
+    this.canvas.addEventListener("touchend", (e) => {
       this.pinchDistance = null;
-      this.multiTouchActive = false;
+      this.multiTouchActive = e.touches.length > 0;
+    });
+
+    this.canvas.addEventListener("touchcancel", (e) => {
+      this.pinchDistance = null;
+      this.multiTouchActive = e.touches.length > 0;
     });
 
     window.addEventListener("keydown", (e) => {
