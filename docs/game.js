@@ -20,6 +20,10 @@ function setState(state) {
   menuOverlay.classList.toggle("hidden", state !== "menu");
   pauseOverlay.classList.toggle("visible", state === "paused");
   pauseOverlay.classList.toggle("hidden", state !== "paused");
+  const pauseEnabled = state === "playing" || state === "paused";
+  pauseToggle.disabled = !pauseEnabled;
+  pauseToggle.hidden = !pauseEnabled;
+  pauseToggle.setAttribute("aria-hidden", String(!pauseEnabled));
 }
 
 startBtn.addEventListener("click", () => {

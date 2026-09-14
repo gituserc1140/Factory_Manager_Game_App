@@ -10,6 +10,8 @@ export class GameUI {
     this.dragging = false;
     this.dragMoved = false;
     this.lastPointer = null;
+    this.activePointerId = null;
+    this.multiTouchActive = false;
     this.pinchDistance = null;
 
     this.top = {
@@ -108,6 +110,9 @@ export class GameUI {
     );
 
     this.canvas.addEventListener("pointerdown", (e) => {
+      if (this.multiTouchActive) return;
+      if (this.activePointerId !== null && this.activePointerId !== e.pointerId) return;
+      this.activePointerId = e.pointerId;
       this.dragging = true;
       this.dragMoved = false;
       this.lastPointer = { x: e.clientX, y: e.clientY };
@@ -115,6 +120,7 @@ export class GameUI {
     });
 
     this.canvas.addEventListener("pointermove", (e) => {
+      if (e.pointerId !== this.activePointerId) return;
       if (!this.dragging || !this.lastPointer) return;
       const dx = e.clientX - this.lastPointer.x;
       const dy = e.clientY - this.lastPointer.y;
@@ -125,14 +131,29 @@ export class GameUI {
     });
 
     this.canvas.addEventListener("pointerup", (e) => {
-      if (!this.dragMoved) this.placeAt(e.clientX, e.clientY);
+      if (e.pointerId !== this.activePointerId) return;
+      if (!this.dragMoved && !this.multiTouchActive) this.placeAt(e.clientX, e.clientY);
       this.dragging = false;
       this.lastPointer = null;
+      this.activePointerId = null;
       this.canvas.releasePointerCapture(e.pointerId);
+    });
+
+    this.canvas.addEventListener("pointercancel", (e) => {
+      if (e.pointerId !== this.activePointerId) return;
+      this.dragging = false;
+      this.dragMoved = false;
+      this.lastPointer = null;
+      this.activePointerId = null;
     });
 
     this.canvas.addEventListener("touchstart", (e) => {
       if (e.touches.length === 2) {
+        this.multiTouchActive = true;
+        this.dragging = false;
+        this.dragMoved = false;
+        this.lastPointer = null;
+        this.activePointerId = null;
         this.pinchDistance = this.distance(e.touches[0], e.touches[1]);
       }
     }, { passive: false });
@@ -148,6 +169,7 @@ export class GameUI {
 
     this.canvas.addEventListener("touchend", () => {
       this.pinchDistance = null;
+      this.multiTouchActive = false;
     });
 
     window.addEventListener("keydown", (e) => {

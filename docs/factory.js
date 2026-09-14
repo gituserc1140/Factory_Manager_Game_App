@@ -226,7 +226,7 @@ export class FactoryGame {
         );
       }
 
-      this.buildings = Array.isArray(data.buildings)
+      const loadedBuildings = Array.isArray(data.buildings)
         ? data.buildings.filter(
             (b) =>
               b &&
@@ -237,6 +237,13 @@ export class FactoryGame {
               DIRECTIONS.includes(b.dir),
           )
         : [];
+      const occupiedTiles = new Set();
+      this.buildings = loadedBuildings.filter((b) => {
+        const key = this.tileKey(b.x, b.y);
+        if (occupiedTiles.has(key)) return false;
+        occupiedTiles.add(key);
+        return true;
+      });
 
       this.beltItems = Array.isArray(data.beltItems)
         ? data.beltItems.filter(
