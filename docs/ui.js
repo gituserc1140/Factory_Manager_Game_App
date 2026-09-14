@@ -97,11 +97,15 @@ export class GameUI {
   bindInputs() {
     this.canvas.addEventListener("contextmenu", (e) => e.preventDefault());
 
-    this.canvas.addEventListener("wheel", (e) => {
-      e.preventDefault();
-      const factor = e.deltaY > 0 ? 0.92 : 1.08;
-      this.game.camera.zoom = Math.max(0.45, Math.min(2.5, this.game.camera.zoom * factor));
-    });
+    this.canvas.addEventListener(
+      "wheel",
+      (e) => {
+        e.preventDefault();
+        const factor = e.deltaY > 0 ? 0.92 : 1.08;
+        this.game.camera.zoom = Math.max(0.45, Math.min(2.5, this.game.camera.zoom * factor));
+      },
+      { passive: false },
+    );
 
     this.canvas.addEventListener("pointerdown", (e) => {
       this.dragging = true;

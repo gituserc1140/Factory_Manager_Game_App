@@ -200,13 +200,16 @@ export class FactoryGame {
 
     try {
       const data = JSON.parse(raw);
+      const fresh = new FactoryGame();
+      Object.assign(this, fresh);
+
       this.money = data.money ?? this.money;
-      this.level = data.level ?? 1;
-      this.totalProduced = data.totalProduced ?? 0;
-      this.itemsSold = data.itemsSold ?? 0;
-      this.buildingsPlaced = data.buildingsPlaced ?? 0;
-      this.selectedType = data.selectedType ?? "miner";
-      this.selectedDirection = data.selectedDirection ?? "right";
+      this.level = data.level ?? this.level;
+      this.totalProduced = data.totalProduced ?? this.totalProduced;
+      this.itemsSold = data.itemsSold ?? this.itemsSold;
+      this.buildingsPlaced = data.buildingsPlaced ?? this.buildingsPlaced;
+      this.selectedType = data.selectedType ?? this.selectedType;
+      this.selectedDirection = data.selectedDirection ?? this.selectedDirection;
       this.camera = data.camera ?? this.camera;
       this.deposits = data.deposits ?? this.deposits;
       this.buildings = data.buildings ?? [];

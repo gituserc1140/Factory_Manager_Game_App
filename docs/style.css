@@ -86,6 +86,10 @@ body {
   z-index: 15;
 }
 
+.overlay.visible {
+  display: grid;
+}
+
 .hidden {
   display: none;
 }
@@ -122,6 +126,13 @@ body {
   border-radius: 50%;
   background: #243d52;
   color: #fff;
+}
+
+.toolBtn:focus-visible,
+.menuCard button:focus-visible,
+#pauseToggle:focus-visible {
+  outline: 3px solid #ffd27f;
+  outline-offset: 2px;
 }
 
 @media (max-width: 720px) {
