@@ -1,12 +1,13 @@
 import {
   BUILDING_TYPES,
+  DIRECTIONS,
   createBuilding,
   tileInDirection,
   canAcceptItem,
   receiveItem,
   updateMachine,
 } from "./machines.js";
-import { createDeposits, depositAt } from "./resources.js";
+import { createDeposits, depositAt, RESOURCE_TYPES } from "./resources.js";
 
 const SAVE_KEY = "factory-manager-save-v1";
 
@@ -208,12 +209,47 @@ export class FactoryGame {
       this.totalProduced = data.totalProduced ?? this.totalProduced;
       this.itemsSold = data.itemsSold ?? this.itemsSold;
       this.buildingsPlaced = data.buildingsPlaced ?? this.buildingsPlaced;
-      this.selectedType = data.selectedType ?? this.selectedType;
-      this.selectedDirection = data.selectedDirection ?? this.selectedDirection;
-      this.camera = data.camera ?? this.camera;
-      this.deposits = data.deposits ?? this.deposits;
-      this.buildings = data.buildings ?? [];
-      this.beltItems = data.beltItems ?? [];
+      this.selectedType = BUILDING_TYPES[data.selectedType] ? data.selectedType : this.selectedType;
+      this.selectedDirection = DIRECTIONS.includes(data.selectedDirection) ? data.selectedDirection : this.selectedDirection;
+
+      if (data.camera && Number.isFinite(data.camera.x) && Number.isFinite(data.camera.y) && Number.isFinite(data.camera.zoom)) {
+        this.camera = {
+          x: data.camera.x,
+          y: data.camera.y,
+          zoom: Math.max(0.45, Math.min(2.5, data.camera.zoom)),
+        };
+      }
+
+      if (Array.isArray(data.deposits)) {
+        this.deposits = data.deposits.filter(
+          (d) => Number.isInteger(d.x) && Number.isInteger(d.y) && RESOURCE_TYPES[d.resource] && this.inBounds(d.x, d.y),
+        );
+      }
+
+      this.buildings = Array.isArray(data.buildings)
+        ? data.buildings.filter(
+            (b) =>
+              b &&
+              BUILDING_TYPES[b.type] &&
+              Number.isInteger(b.x) &&
+              Number.isInteger(b.y) &&
+              this.inBounds(b.x, b.y) &&
+              DIRECTIONS.includes(b.dir),
+          )
+        : [];
+
+      this.beltItems = Array.isArray(data.beltItems)
+        ? data.beltItems.filter(
+            (bi) =>
+              bi &&
+              Number.isInteger(bi.x) &&
+              Number.isInteger(bi.y) &&
+              this.inBounds(bi.x, bi.y) &&
+              DIRECTIONS.includes(bi.dir) &&
+              typeof bi.item === "string" &&
+              Number.isFinite(bi.progress),
+          )
+        : [];
       this.tiles = new Map();
       for (const b of this.buildings) {
         this.tiles.set(this.tileKey(b.x, b.y), b);

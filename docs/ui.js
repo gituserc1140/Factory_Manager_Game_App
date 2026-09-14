@@ -168,9 +168,11 @@ export class GameUI {
     const worldH = this.game.world.height * this.game.world.tileSize;
     const viewW = this.canvas.clientWidth / this.game.camera.zoom;
     const viewH = this.canvas.clientHeight / this.game.camera.zoom;
+    const maxX = Math.max(0, worldW - viewW);
+    const maxY = Math.max(0, worldH - viewH);
 
-    this.game.camera.x = Math.max(0, Math.min(worldW - viewW, this.game.camera.x));
-    this.game.camera.y = Math.max(0, Math.min(worldH - viewH, this.game.camera.y));
+    this.game.camera.x = Math.max(0, Math.min(maxX, this.game.camera.x));
+    this.game.camera.y = Math.max(0, Math.min(maxY, this.game.camera.y));
   }
 
   draw(timeSec) {
